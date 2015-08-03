@@ -292,19 +292,22 @@ public class ApiClient {
         containerType = containerType.toLowerCase();
     }
     try{
+      ObjectMapper mapper = new ObjectMapper();
+      JsonNode root = mapper.readTree(json);
+      JsonNode data = root.get("data");
       if("list".equals(containerType) || "array".equals(containerType)) {
         JavaType typeInfo = JsonUtil.getJsonMapper().getTypeFactory().constructCollectionType(List.class, cls);
-        List response = (List<?>) JsonUtil.getJsonMapper().readValue(json, typeInfo);
+        List response = (List<?>) JsonUtil.getJsonMapper().readValue(String.valueOf(data), typeInfo);
         return response;
       }
       else if(String.class.equals(cls)) {
-        if(json != null && json.startsWith("\"") && json.endsWith("\"") && json.length() > 1)
-          return json.substring(1, json.length() - 2);
+        if(String.valueOf(data) != null && String.valueOf(data).startsWith("\"") && String.valueOf(data).endsWith("\"") && String.valueOf(data).length() > 1)
+          return String.valueOf(data).substring(1, String.valueOf(data).length() - 2);
         else
-          return json;
+          return data;
       }
       else {
-        return JsonUtil.getJsonMapper().readValue(json, cls);
+        return JsonUtil.getJsonMapper().readValue(String.valueOf(data), cls);
       }
     }
     catch (IOException e) {
