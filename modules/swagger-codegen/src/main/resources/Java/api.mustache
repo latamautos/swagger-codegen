@@ -109,7 +109,7 @@ public class {{classname}} implements I{{classname}} {
       String[] authNames = new String[] { {{#authMethods}}"{{name}}"{{#hasMore}}, {{/hasMore}}{{/authMethods}} };
       String response = apiClient.invokeAPI(path, "{{httpMethod}}", queryParams, postBody, headerParams, formParams, accept, contentType, authNames);
       if(response != null){
-        Response result = (Response) apiClient.deserialize(response, "{{returnContainer}}", Response.class);
+        Response result = (Response) apiClient.deserialize(response, "", Response.class);
         return {{#returnType}}({{{returnType}}}) result.getData(){{/returnType}};
       }
       else {
